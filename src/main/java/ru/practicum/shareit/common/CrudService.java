@@ -7,51 +7,51 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public abstract class CrudService<ID, MODEL extends Model<ID>, DTO extends ModelDto<ID>> {
-    protected DtoMapper<MODEL, DTO> mapper;
-    protected CrudRepository<ID, MODEL> repository;
+public abstract class CrudService<E, M extends Model<E>, D extends ModelDto<E>> {
+    protected DtoMapper<M, D> mapper;
+    protected CrudRepository<E, M> repository;
 
-    public CrudService(DtoMapper<MODEL, DTO> mapper, CrudRepository<ID, MODEL> repository) {
+    public CrudService(DtoMapper<M, D> mapper, CrudRepository<E, M> repository) {
         this.mapper = mapper;
         this.repository = repository;
     }
 
-    protected abstract Void validate(MODEL model);
+    protected abstract Void validate(M model);
 
-    public List<DTO> findAll() {
+    public List<D> findAll() {
         return repository.findAll()
                 .stream()
                 .map(model -> mapper.convert(model))
                 .collect(Collectors.toList());
     }
 
-    public DTO findById(ID id) {
-        Optional<MODEL> modelOpt = repository.findById(id);
+    public D findById(E id) {
+        Optional<M> modelOpt = repository.findById(id);
         if (modelOpt.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return mapper.convert(modelOpt.get());
     }
 
-    public DTO save(DTO dto) {
-        MODEL model = mapper.convert(dto);
+    public D save(D dto) {
+        M model = mapper.convert(dto);
         model = repository.save(model, this::validate);
         return mapper.convert(model);
     }
 
-    public DTO patch(ID id, DTO dto) {
-        Optional<MODEL> modelOpt = repository.findById(id);
+    public D patch(E id, D dto) {
+        Optional<M> modelOpt = repository.findById(id);
         if (modelOpt.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        MODEL model = modelOpt.get();
+        M model = modelOpt.get();
 
         model = mapper.update(model, dto);
         model = repository.update(model, this::validate);
         return mapper.convert(model);
     }
 
-    public void remove(ID id) {
+    public void remove(E id) {
         repository.remove(id);
     }
 

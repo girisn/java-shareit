@@ -1,9 +1,9 @@
 package ru.practicum.shareit.common;
 
-public interface DtoMapper<MODEL extends Model, DTO extends ModelDto> {
-    MODEL convert(DTO dto);
+public interface DtoMapper<M extends Model, D extends ModelDto> {
+    M convert(D dto);
 
-    DTO convert(MODEL dto);
+    D convert(M dto);
 
-    MODEL update(MODEL user, DTO dto);
+    M update(M user, D dto);
 }

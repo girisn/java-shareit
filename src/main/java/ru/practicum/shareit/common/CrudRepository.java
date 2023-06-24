@@ -6,25 +6,25 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class CrudRepository<ID, MODEL extends Model<ID>> {
-    private ID currentId;
-    private final Function<ID, ID> increaseCurrentId;
-    protected final Map<ID, MODEL> storage = new HashMap<>();
+public class CrudRepository<E, M extends Model<E>> {
+    private E currentId;
+    private final Function<E, E> increaseCurrentId;
+    protected final Map<E, M> storage = new HashMap<>();
 
-    public CrudRepository(ID initialId, Function<ID, ID> increaseCurrentId) {
+    public CrudRepository(E initialId, Function<E, E> increaseCurrentId) {
         this.currentId = initialId;
         this.increaseCurrentId = increaseCurrentId;
     }
 
-    public Collection<MODEL> findAll() {
+    public Collection<M> findAll() {
         return storage.values();
     }
 
-    public Optional<MODEL> findById(ID id) {
+    public Optional<M> findById(E id) {
         return Optional.ofNullable(storage.get(id));
     }
 
-    public MODEL save(MODEL model, Function<MODEL, Void> validate) {
+    public M save(M model, Function<M, Void> validate) {
         validate.apply(model);
         model.setId(currentId);
         storage.put(currentId, model);
@@ -32,13 +32,13 @@ public class CrudRepository<ID, MODEL extends Model<ID>> {
         return model;
     }
 
-    public MODEL update(MODEL model, Function<MODEL, Void> validate) {
+    public M update(M model, Function<M, Void> validate) {
         validate.apply(model);
         storage.put(model.getId(), model);
         return model;
     }
 
-    public void remove(ID id) {
+    public void remove(E id) {
         storage.remove(id);
     }
 }

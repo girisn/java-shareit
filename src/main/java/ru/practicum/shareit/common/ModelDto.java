@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ModelDto<ID> {
-    protected ID id;
+public class ModelDto<E> {
+    protected E id;
 }
