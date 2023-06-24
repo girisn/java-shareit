@@ -4,17 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.shareit.common.Model;
+import ru.practicum.shareit.common.ModelDto;
+
+import javax.validation.constraints.Email;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends Model<Integer> {
+public class UserDto extends ModelDto<Integer> {
+    @Email
     private String email;
     private String name;
 
-    public User(Integer id, String email, String name) {
+    public UserDto(Integer id, String email, String name) {
         super(id);
         this.email = email;
         this.name = name;
