@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.common.CrudService;
 
-import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class UserService extends CrudService<Integer, User, UserDto> {
@@ -18,13 +18,11 @@ public class UserService extends CrudService<Integer, User, UserDto> {
 
     @Override
     protected Void validate(User user) {
-        Collection<User> values = this.repository.findAll();
         if (user.getEmail() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        if (values.stream()
-                .filter(u -> !u.getId().equals(user.getId()))
-                .anyMatch(u -> u.getEmail().equals(user.getEmail()))) {
+        Optional<User> userOpt = ((UserRepository) repository).findByEmail(user.getEmail());
+        if (userOpt.isPresent() && !userOpt.get().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
         return null;

@@ -8,10 +8,8 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.common.CrudService;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,10 +52,8 @@ public class ItemService extends CrudService<Integer, Item, ItemDto> {
 
     @Override
     protected Void validate(Item model) {
-        Collection<User> users = userRepository.findAll();
-        if (users.stream().noneMatch(u -> u.getId().equals(model.getUserId()))) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        userRepository.findById(model.getUserId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         Optional<Item> item = repository.findById(model.getId());
         if (item.isPresent()) {
