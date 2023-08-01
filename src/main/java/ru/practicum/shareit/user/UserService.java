@@ -9,11 +9,13 @@ import ru.practicum.shareit.common.CrudService;
 import java.util.Optional;
 
 @Service
-public class UserService extends CrudService<Integer, User, UserDto> {
+public class UserService extends CrudService<Long, User, UserDto> {
+    private final UserRepository userRepository;
     @Autowired
     public UserService(UserMapper mapper,
                        UserRepository repository) {
         super(mapper, repository);
+        userRepository = repository;
     }
 
     @Override
@@ -21,7 +23,7 @@ public class UserService extends CrudService<Integer, User, UserDto> {
         if (user.getEmail() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        Optional<User> userOpt = ((UserRepository) repository).findByEmail(user.getEmail());
+        Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
         if (userOpt.isPresent() && !userOpt.get().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }

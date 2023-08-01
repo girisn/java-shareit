@@ -1,5 +1,6 @@
 package ru.practicum.shareit.common;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -9,9 +10,9 @@ import java.util.stream.Collectors;
 
 public abstract class CrudService<E, M extends Model<E>, D extends ModelDto<E>> {
     protected DtoMapper<M, D> mapper;
-    protected CrudRepository<E, M> repository;
+    private JpaRepository<M, E> repository;
 
-    public CrudService(DtoMapper<M, D> mapper, CrudRepository<E, M> repository) {
+    public CrudService(DtoMapper<M, D> mapper, JpaRepository repository) {
         this.mapper = mapper;
         this.repository = repository;
     }
@@ -35,7 +36,8 @@ public abstract class CrudService<E, M extends Model<E>, D extends ModelDto<E>> 
 
     public D save(D dto) {
         M model = mapper.convert(dto);
-        model = repository.save(model, this::validate);
+        this.validate(model);
+        model = repository.save(model);
         return mapper.convert(model);
     }
 
@@ -47,12 +49,13 @@ public abstract class CrudService<E, M extends Model<E>, D extends ModelDto<E>> 
         M model = modelOpt.get();
 
         model = mapper.update(model, dto);
-        model = repository.update(model, this::validate);
+        this.validate(model);
+        model = repository.save(model);
         return mapper.convert(model);
     }
 
     public void remove(E id) {
-        repository.remove(id);
+        repository.deleteById(id);
     }
 
 }

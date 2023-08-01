@@ -12,14 +12,9 @@ import javax.validation.constraints.Email;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto extends ModelDto<Integer> {
+public class UserDto implements ModelDto<Long> {
+    private Long id;
     @Email
     private String email;
     private String name;
-
-    public UserDto(Integer id, String email, String name) {
-        super(id);
-        this.email = email;
-        this.name = name;
-    }
 }
