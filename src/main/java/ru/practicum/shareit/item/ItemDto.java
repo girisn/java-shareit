@@ -1,10 +1,8 @@
 package ru.practicum.shareit.item;
 
 import lombok.*;
-import ru.practicum.shareit.user.User;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.util.List;
 

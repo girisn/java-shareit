@@ -4,15 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/bookings")
 public class BookingController {
     private final BookingService bookingService;
+
     @Autowired
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;

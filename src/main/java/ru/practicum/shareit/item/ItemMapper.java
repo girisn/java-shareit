@@ -45,7 +45,7 @@ public class ItemMapper {
                     next.getBooker().getId()
             );
         }
-        
+
         return new ItemDto(
                 item.getId(),
                 item.getName(),
