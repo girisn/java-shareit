@@ -52,12 +52,14 @@ public class ItemService {
         Item item = this.itemRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Booking lastBooking = bookingRepository.findPastOwnerBookings(item.getId(), userId, Timestamp.from(Instant.now()))
                 .stream()
-                .min(Comparator.comparing(Booking::getEnd))
+                .filter(booking -> booking.getStatus().equals(Booking.Status.APPROVED))
+                .max(Comparator.comparing(Booking::getEnd))
                 .orElse(null);
 
         Booking nextBooking = bookingRepository.findFutureOwnerBookings(item.getId(), userId, Timestamp.from(Instant.now()))
                 .stream()
-                .max(Comparator.comparing(Booking::getStart))
+                .filter(booking -> booking.getStatus().equals(Booking.Status.APPROVED))
+                .min(Comparator.comparing(Booking::getStart))
                 .orElse(null);
 
         List<CommentDto> commentsDto = commentDto(item);
@@ -98,7 +100,8 @@ public class ItemService {
     public Booking bookingLast(Item item) {
         return bookingRepository.findAllByItemIdAndStartBeforeOrderByStartDesc(item.getId(), Timestamp.from(Instant.now()))
                 .stream()
-                .min(Comparator.comparing(Booking::getEnd))
+                .filter(booking -> booking.getStatus().equals(Booking.Status.APPROVED))
+                .max(Comparator.comparing(Booking::getEnd))
                 .orElse(null);
     }
 
@@ -112,7 +115,8 @@ public class ItemService {
     public Booking bookingNext(Item item) {
         return bookingRepository.findAllByItemIdAndStartAfterOrderByStartDesc(item.getId(), Timestamp.from(Instant.now()))
                 .stream()
-                .max(Comparator.comparing(Booking::getStart))
+                .filter(booking -> booking.getStatus().equals(Booking.Status.APPROVED))
+                .min(Comparator.comparing(Booking::getStart))
                 .orElse(null);
     }
 

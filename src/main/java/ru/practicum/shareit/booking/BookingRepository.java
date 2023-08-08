@@ -33,7 +33,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select b from Booking b " +
             "where b.item.id = ?1 and " +
             "b.item.owner.id = ?2 and " +
-            "b.end < ?3 order by b.start desc")
+            "b.start < ?3 order by b.start desc")
     List<Booking> findPastOwnerBookings(long itemId, long ownerId, Timestamp now);
 
     @Query("select b from Booking b " +
