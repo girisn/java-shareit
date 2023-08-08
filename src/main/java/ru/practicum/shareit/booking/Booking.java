@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.shareit.common.Model;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 
@@ -17,12 +16,14 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Entity
 @Table(name = "bookings")
-public class Booking implements Model<Long> {
+public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "start_time")
     private Timestamp start;
+    @Column(name = "end_time")
     private Timestamp end;
 
     @Enumerated(EnumType.STRING)
@@ -34,7 +35,10 @@ public class Booking implements Model<Long> {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private User booker;
+
+    @Column(name = "create_date")
+    private Timestamp createDate;
 
     public enum Status {
         WAITING,

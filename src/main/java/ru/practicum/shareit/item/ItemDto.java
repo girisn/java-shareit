@@ -1,27 +1,39 @@
 package ru.practicum.shareit.item;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import ru.practicum.shareit.common.ModelDto;
+import lombok.*;
 import ru.practicum.shareit.user.User;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemDto implements ModelDto<Long> {
+public class ItemDto {
     private Long id;
-    @Null
-    private Long userId;
     @NotBlank
     private String name;
     @NotBlank
     private String description;
     @NotBlank
     private Boolean available;
+
+    private BookingForItemDto lastBooking;
+    private BookingForItemDto nextBooking;
+    @ToString.Exclude
+    List<CommentDto> comments;
+
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BookingForItemDto {
+        private Long id;
+        private LocalDateTime start;
+        private LocalDateTime end;
+        private Long bookerId;
+    }
 }

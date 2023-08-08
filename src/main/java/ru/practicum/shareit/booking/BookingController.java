@@ -1,8 +1,12 @@
 package ru.practicum.shareit.booking;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -15,33 +19,33 @@ public class BookingController {
     }
 
     @PostMapping
-    public BookingDto create(@RequestHeader("X-Sharer-User-Id") Long userId,
-                             @RequestBody BookingDto booking) {
-        return bookingService.save(booking);
+    public ResponseEntity<?> save(@RequestBody InputBookingDto bookingDto,
+                                  @RequestHeader("X-Sharer-User-Id") long userId) {
+        return new ResponseEntity<>(bookingService.save(bookingDto, userId), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
-    public BookingDto patch(@RequestHeader("X-Sharer-User-Id") Long userId,
-                            @PathVariable Long id,
-                            @RequestParam boolean approved) {
-        return bookingService.approve(userId, id, approved);
+    @PatchMapping("/{bookingId}")
+    public ResponseEntity<?> approve(@PathVariable long bookingId,
+                                     @RequestParam Boolean approved,
+                                     @RequestHeader("X-Sharer-User-Id") long userId) {
+        return new ResponseEntity<>(bookingService.approve(userId, bookingId, approved), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public BookingDto getById(@RequestHeader("X-Sharer-User-Id") Long userId,
-                              @PathVariable Long id) {
-        return bookingService.findById(userId, id);
+    @GetMapping("/{bookingId}")
+    public ResponseEntity<?> getById(@PathVariable long bookingId,
+                                     @RequestHeader("X-Sharer-User-Id") long userId) {
+        return new ResponseEntity<>(bookingService.getById(bookingId, userId), HttpStatus.OK);
     }
 
     @GetMapping
-    public List<BookingDto> findAll(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                    @RequestParam(defaultValue = "ALL") BookingState state) {
-        return bookingService.findByState(userId, state);
+    public ResponseEntity<?> getAllForBooker(@RequestHeader("X-Sharer-User-Id") long userId,
+                                             @RequestParam(required = false, defaultValue = "ALL") String state) {
+        return new ResponseEntity<>(bookingService.findAllForBooker(userId, state), HttpStatus.OK);
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> findAllOwner(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                         @RequestParam(defaultValue = "ALL") BookingState state) {
-        return bookingService.findByStateOwner(userId, state);
+    public ResponseEntity<?> getAllForOwner(@RequestHeader("X-Sharer-User-Id") long owner,
+                                            @RequestParam(required = false, defaultValue = "ALL") String state) {
+        return new ResponseEntity<>(bookingService.findAllForOwner(owner, state), HttpStatus.OK);
     }
 }

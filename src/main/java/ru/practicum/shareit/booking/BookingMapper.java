@@ -1,33 +1,47 @@
 package ru.practicum.shareit.booking;
 
-import ru.practicum.shareit.common.DtoMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.practicum.shareit.item.ItemMapper;
+import ru.practicum.shareit.user.UserMapper;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
-public class BookingMapper implements DtoMapper<Booking, BookingDto> {
-    @Override
-    public Booking convert(BookingDto dto) {
-        return new Booking(
-                dto.getId(),
-                Timestamp.valueOf(dto.getStart()),
-                Timestamp.valueOf(dto.getEnd()),
-                dto.getStatus(),
-                null,
-                null);
+@Component
+public class BookingMapper {
+    private final ItemMapper itemMapper;
+    private final UserMapper userMapper;
+
+    @Autowired
+    public BookingMapper(ItemMapper itemMapper,
+                         UserMapper userMapper) {
+        this.itemMapper = itemMapper;
+        this.userMapper = userMapper;
     }
 
-    @Override
+    public Booking convert(InputBookingDto dto) {
+        return new Booking(
+                dto.getId(),
+                dto.getStart() == null ? null : Timestamp.valueOf(dto.getStart()),
+                dto.getEnd() == null ? null : Timestamp.valueOf(dto.getEnd()),
+                dto.getStatus(),
+                null,
+                null,
+                Timestamp.from(Instant.now()));
+    }
+
     public BookingDto convert(Booking dto) {
         return new BookingDto(
                 dto.getId(),
                 dto.getStart().toLocalDateTime(),
                 dto.getEnd().toLocalDateTime(),
-                dto.getItem().getId(),
-                dto.getStatus());
+                dto.getStatus().name(),
+                itemMapper.convert(dto.getItem()),
+                userMapper.convert(dto.getBooker()));
     }
 
-    @Override
-    public Booking update(Booking user, BookingDto dto) {
+    public Booking update(Booking user, InputBookingDto dto) {
         return this.convert(dto);
     }
 }

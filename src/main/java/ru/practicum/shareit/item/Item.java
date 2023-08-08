@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.shareit.common.Model;
+import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,16 +16,23 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "items")
-public class Item implements Model<Long> {
+public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private User owner;
 
     private String name;
     private String description;
     private Boolean available = false;
+
+    @Transient
+    private Booking lastBooking;
+    @Transient
+    private Booking nextBooking;
+    @Transient
+    private List<CommentDto> comments;
 }

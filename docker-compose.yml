@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:9.6
+    environment:
+      POSTGRES_PASSWORD: "shareit"
+      POSTGRES_USER: "shareit"
+      POSTGRES_DB: "shareit"
+    ports:
+      - 5432:5432
+    volumes:
+      - db2:/var/lib/postgresql/data
+
+volumes:
+  db2:
