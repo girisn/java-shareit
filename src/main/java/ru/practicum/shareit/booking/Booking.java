@@ -21,9 +21,9 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "start_time")
+    @Column(name = "start_date")
     private Timestamp start;
-    @Column(name = "end_time")
+    @Column(name = "end_date")
     private Timestamp end;
 
     @Enumerated(EnumType.STRING)
@@ -34,7 +34,7 @@ public class Booking {
     private Item item;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "booker_id", referencedColumnName = "id")
     private User booker;
 
     @Column(name = "create_date")

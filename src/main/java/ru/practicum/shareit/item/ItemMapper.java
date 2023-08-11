@@ -9,7 +9,7 @@ import java.util.List;
 public class ItemMapper {
     public Item convert(ItemDto dto) {
         return new Item(dto.getId(), null, dto.getName(), dto.getDescription(), dto.getAvailable(),
-                null, null, null);
+                null, null, null, null);
     }
 
     public ItemDto convert(Item item) {
@@ -59,7 +59,7 @@ public class ItemMapper {
 
     public Item update(Item item, ItemDto dto) {
         Item updated = new Item(item.getId(), item.getOwner(), item.getName(), item.getDescription(), item.getAvailable(),
-                null, null, null);
+                null, null, null, null);
 //        if (dto.getUser() != null) {
 //            updated.setUser(dto.getUser());
 //        }
