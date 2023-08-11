@@ -16,7 +16,7 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody InputBookingDto bookingDto,
+    public ResponseEntity<?> save(@RequestBody BookingDto bookingDto,
                                   @RequestHeader("X-Sharer-User-Id") long userId) {
         return new ResponseEntity<>(bookingService.save(bookingDto, userId), HttpStatus.CREATED);
     }

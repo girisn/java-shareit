@@ -37,7 +37,7 @@ public class BookingService {
         this.bookingRepository = repository;
     }
 
-    public BookingDto save(InputBookingDto bookingDto, long userId) {
+    public BookingDto save(BookingDto bookingDto, long userId) {
         Item item = itemRepository.findById(bookingDto.getItemId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         User booker = getUser(userId);

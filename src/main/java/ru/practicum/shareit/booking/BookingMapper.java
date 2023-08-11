@@ -20,12 +20,12 @@ public class BookingMapper {
         this.userMapper = userMapper;
     }
 
-    public Booking convert(InputBookingDto dto) {
+    public Booking convert(BookingDto dto) {
         return new Booking(
                 dto.getId(),
                 dto.getStart() == null ? null : Timestamp.valueOf(dto.getStart()),
                 dto.getEnd() == null ? null : Timestamp.valueOf(dto.getEnd()),
-                dto.getStatus(),
+                Booking.Status.valueOf(dto.getStatus()),
                 null,
                 null,
                 Timestamp.from(Instant.now()));
@@ -34,14 +34,11 @@ public class BookingMapper {
     public BookingDto convert(Booking dto) {
         return new BookingDto(
                 dto.getId(),
+                null,
                 dto.getStart().toLocalDateTime(),
                 dto.getEnd().toLocalDateTime(),
                 dto.getStatus().name(),
                 itemMapper.convert(dto.getItem()),
                 userMapper.convert(dto.getBooker()));
-    }
-
-    public Booking update(Booking user, InputBookingDto dto) {
-        return this.convert(dto);
     }
 }
