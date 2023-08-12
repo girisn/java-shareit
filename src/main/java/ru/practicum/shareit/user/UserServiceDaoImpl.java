@@ -13,10 +13,6 @@ import ru.practicum.shareit.user.dto.UserDto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.shareit.user.UserMapper.userDtotoUser;
-import static ru.practicum.shareit.user.UserMapper.userToUserDto;
-
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -24,13 +20,14 @@ import static ru.practicum.shareit.user.UserMapper.userToUserDto;
 public class UserServiceDaoImpl implements UserService {
     private final UserRepository repository;
     private final ItemRepository itemRepository;
+    private final UserMapper userMapper;
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        User user = userDtotoUser(userDto);
+        User user = userMapper.userDtotoUser(userDto);
         log.info("User with email = {}  has been created", userDto.getEmail());
         try {
-            return userToUserDto(repository.save(user));
+            return userMapper.userToUserDto(repository.save(user));
         } catch (DataIntegrityViolationException e) {
             throw new AlreadyExistsException(String.format(
                     "User %s has been registered yet", userDto.getEmail()
@@ -44,7 +41,7 @@ public class UserServiceDaoImpl implements UserService {
         log.info("Get all user");
         return repository.findAll()
                 .stream()
-                .map(UserMapper::userToUserDto)
+                .map(userMapper::userToUserDto)
                 .collect(Collectors.toList());
     }
 
@@ -54,7 +51,7 @@ public class UserServiceDaoImpl implements UserService {
         User user = repository.findById(id).orElseThrow(() ->
                 new NotFoundException("User with id = " + id + " has not found"));
         log.info("User with id = {} is uploaded", id);
-        return userToUserDto(user);
+        return userMapper.userToUserDto(user);
     }
 
     @Override
@@ -68,7 +65,7 @@ public class UserServiceDaoImpl implements UserService {
         }
         log.info("User with id = {} is updated", userDto.getId());
         try {
-            return userToUserDto(repository.saveAndFlush(user));
+            return userMapper.userToUserDto(repository.saveAndFlush(user));
         } catch (DataIntegrityViolationException e) {
             throw new AlreadyExistsException("Already exists");
         }

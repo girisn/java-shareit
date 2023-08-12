@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.practicum.shareit.booking.State.validateState;
-import static ru.practicum.shareit.booking.dto.BookingMapper.bookingToBookingDto;
-import static ru.practicum.shareit.booking.dto.BookingMapper.bookingToBookingShortDto;
 import static ru.practicum.shareit.util.Constants.SORT_BY_DESC;
 
 
@@ -31,6 +29,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final BookingMapper bookingMapper;
 
     @Override
     public BookingDto createBooking(Long userId, BookingShortDto bookingShortDto) {
@@ -53,13 +52,13 @@ public class BookingServiceImpl implements BookingService {
             throw new NotAvailableException("Item with id= " + userId + " isn't not available");
         }
 
-        Booking booking = bookingToBookingShortDto(bookingShortDto);
+        Booking booking = bookingMapper.bookingToBookingShortDto(bookingShortDto);
         booking.setBooker(userRepository.findById(userId).orElseThrow(()
                 -> new NotFoundException("User with id= " + userId + " hasn't not found")));
         booking.setItem(item);
         booking.setStatus(Status.WAITING);
 
-        return bookingToBookingDto(bookingRepository.save(booking));
+        return bookingMapper.bookingToBookingDto(bookingRepository.save(booking));
     }
 
     @Transactional(readOnly = true)
@@ -70,7 +69,7 @@ public class BookingServiceImpl implements BookingService {
         if (!booking.getBooker().getId().equals(id) && !booking.getItem().getOwner().getId().equals(id)) {
             throw new NotFoundException("User with id= " + id + " is not booker or owner");
         }
-        return bookingToBookingDto(booking);
+        return bookingMapper.bookingToBookingDto(booking);
     }
 
     @Transactional(readOnly = true)
@@ -106,7 +105,7 @@ public class BookingServiceImpl implements BookingService {
 
         log.info("Get booking with state  = {}", state);
         return bookingList.stream()
-                .map(BookingMapper::bookingToBookingDto)
+                .map(bookingMapper::bookingToBookingDto)
                 .collect(Collectors.toList());
     }
 
@@ -144,7 +143,7 @@ public class BookingServiceImpl implements BookingService {
 
         log.info("Get all owners booking with state  = {}", state);
         return bookingList.stream()
-                .map(BookingMapper::bookingToBookingDto)
+                .map(bookingMapper::bookingToBookingDto)
                 .collect(Collectors.toList());
     }
 
@@ -165,7 +164,7 @@ public class BookingServiceImpl implements BookingService {
             booking.setStatus(Status.REJECTED);
         }
         log.info("Get approve booking with id  = {}", bookingId);
-        return bookingToBookingDto(bookingRepository.save(booking));
+        return bookingMapper.bookingToBookingDto(bookingRepository.save(booking));
     }
 
     private Booking validateBooking(Long bookingId) {
