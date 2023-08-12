@@ -1,43 +1,52 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.marker.Marker;
+import ru.practicum.shareit.user.dto.UserDto;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "/users")
+@Slf4j
 public class UserController {
-    @Autowired
-    private UserService userService;
-
-    @GetMapping
-    public List<UserDto> getAll() {
-        return userService.findAll();
-    }
-
-    @GetMapping("/{userId}")
-    public UserDto getById(@PathVariable Integer userId) {
-        return userService.findById(userId);
-    }
+    private final UserService userService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto create(@Valid @RequestBody UserDto user) {
-        return userService.save(user);
+    public UserDto createUser(@Validated({Marker.OnCreate.class}) @RequestBody UserDto userDto) {
+        log.info("The user with id = {} has been created", userDto.getId());
+        return userService.createUser(userDto);
     }
 
-    @PatchMapping("/{userId}")
-    public UserDto patch(@PathVariable Integer userId,
-                         @Valid @RequestBody UserDto user) {
-        return userService.patch(userId, user);
+    @GetMapping("/{id}")
+    public UserDto getUserById(@PathVariable Long id) {
+        log.info("Get a user by id = {}", id);
+        return userService.getUserById(id);
     }
 
-    @DeleteMapping("/{userId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer userId) {
-        userService.remove(userId);
+    @GetMapping
+    public List<UserDto> getAllUsers() {
+        log.info("GET {} users", userService.getAllUsers().size());
+        return userService.getAllUsers();
+    }
+
+    @ResponseBody
+    @PatchMapping("/{id}")
+    public UserDto updateUserById(@Validated(Marker.OnUpdate.class) @RequestBody UserDto userDto,
+                                  @PathVariable Long id) {
+        log.info("The user with id = {} has been updated", id);
+        return userService.updateUserById(id, userDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public Boolean removeUserById(@PathVariable Long id) {
+        log.info("The user with id = {} has been removed", id);
+        return userService.removeUserById(id);
     }
 }

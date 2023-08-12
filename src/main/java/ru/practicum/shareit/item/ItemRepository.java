@@ -1,34 +1,17 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.common.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
-@Repository
-public class ItemRepository extends CrudRepository<Integer, Item> {
-    public ItemRepository() {
-        super(1, (id) -> id + 1);
-    }
+public interface ItemRepository extends JpaRepository<Item, Long> {
+    Collection<Item> findAllByOwnerId(Long userId);
 
-    public List<Item> findByUserId(Integer userId) {
-        return this.storage.values()
-                .stream()
-                .filter(item -> item.getUserId().equals(userId))
-                .collect(Collectors.toList());
-    }
-
-    public List<Item> findBySearchString(String search) {
-        if (search.equals("")) {
-            return Collections.emptyList();
-        }
-        return this.storage.values()
-                .stream()
-                .filter(item -> item.getAvailable().equals(true))
-                .filter(item -> item.getDescription().toLowerCase().contains(search.toLowerCase()))
-                .collect(Collectors.toList());
-    }
+    @Query("SELECT i FROM Item AS i " +
+            "WHERE (LOWER(i.name) LIKE LOWER(concat('%', :text, '%')) " +
+            "OR LOWER(i.description) LIKE LOWER(concat('%', :text, '%'))) AND i.available=true")
+    Collection<Item> findByDescription(@Param("text") String text);
 }
