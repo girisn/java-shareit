@@ -12,11 +12,12 @@ public enum State {
 
 
     public static State validateState(String state) {
-        try {
-            return State.valueOf(state.toUpperCase());
-        } catch (RuntimeException e) {
-            throw new NotSupportedStateException("Unknown state: " + state);
+        for (State value : State.values()) {
+            if (value.name().equals(state.toUpperCase())) {
+                return State.valueOf(state.toUpperCase());
+            }
         }
+        throw new NotSupportedStateException("Unknown state: " + state);
     }
 
-    }
+}
