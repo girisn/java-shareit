@@ -1,9 +1,9 @@
 package ru.practicum.shareit.booking.dto;
 
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.Booking;
 
-@Component
+@UtilityClass
 public class BookingMapper {
     public Booking bookingToBookingShortDto(BookingShortDto bookingShortDto) {
         return Booking.builder()

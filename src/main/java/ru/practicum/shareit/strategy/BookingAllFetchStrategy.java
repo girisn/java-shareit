@@ -1,7 +1,7 @@
 package ru.practicum.shareit.strategy;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
@@ -14,12 +14,12 @@ public class BookingAllFetchStrategy implements BookingStateFetchStrategy {
     private final BookingRepository bookingRepository;
 
     @Override
-    public List<Booking> fetchByBooker(Long id, Sort sort) {
-        return bookingRepository.findAllByBookerId(id, sort);
+    public List<Booking> fetchByBooker(Long id, Pageable pageable) {
+        return bookingRepository.findAllByBookerId(id, pageable);
     }
 
     @Override
-    public List<Booking> fetchByOwner(Long id, Sort sort) {
-        return bookingRepository.findAllByItemOwnerId(id, sort);
+    public List<Booking> fetchByOwner(Long id, Pageable pageable) {
+        return bookingRepository.findAllByItemOwnerId(id, pageable);
     }
 }
