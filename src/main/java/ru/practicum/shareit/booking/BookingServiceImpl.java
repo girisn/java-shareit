@@ -14,8 +14,6 @@ import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.strategy.BookingStateFetchStrategy;
-import ru.practicum.shareit.strategy.BookingStateStrategy;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
@@ -33,7 +31,6 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
-    private final BookingStateStrategy bookingStateStrategy;
 
     @Override
     public BookingDto createBooking(Long userId, BookingShortDto bookingShortDto) {
@@ -82,11 +79,27 @@ public class BookingServiceImpl implements BookingService {
         LocalDateTime time = LocalDateTime.now();
 
         State state = validateState(stateString);
-        BookingStateFetchStrategy strategy = bookingStateStrategy.handlers.get(state);
-        if (strategy == null) {
-            bookingList = Collections.emptyList();
-        } else {
-            bookingList = strategy.fetchByBooker(id, pageable);
+        switch (state) {
+            case ALL:
+                bookingList = bookingRepository.findAllByBookerId(id, pageable);
+                break;
+            case CURRENT:
+                bookingList = bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfter(id, time, time, pageable);
+                break;
+            case PAST:
+                bookingList = bookingRepository.findAllByBookerIdAndEndBefore(id, time, pageable);
+                break;
+            case FUTURE:
+                bookingList = bookingRepository.findAllByBookerIdAndStartAfter(id, time, pageable);
+                break;
+            case WAITING:
+                bookingList = bookingRepository.findAllByBookerIdAndStatus(id, Status.WAITING, pageable);
+                break;
+            case REJECTED:
+                bookingList = bookingRepository.findAllByBookerIdAndStatus(id, Status.REJECTED, pageable);
+                break;
+            default:
+                bookingList = Collections.emptyList();
         }
 
         log.info("Get booking with state  = {}", state);
@@ -104,11 +117,27 @@ public class BookingServiceImpl implements BookingService {
         LocalDateTime now = LocalDateTime.now();
 
         State state = validateState(stateString);
-        BookingStateFetchStrategy strategy = bookingStateStrategy.handlers.get(state);
-        if (strategy == null) {
-            bookingList = Collections.emptyList();
-        } else {
-            bookingList = strategy.fetchByOwner(id, pageable);
+        switch (state) {
+            case ALL:
+                bookingList = bookingRepository.findAllByItemOwnerId(id, pageable);
+                break;
+            case PAST:
+                bookingList = bookingRepository.findAllByItemOwnerIdAndEndBefore(id, now, pageable);
+                break;
+            case CURRENT:
+                bookingList = bookingRepository.findAllByItemOwnerIdAndStartBeforeAndEndAfter(id, now, now, pageable);
+                break;
+            case FUTURE:
+                bookingList = bookingRepository.findAllByItemOwnerIdAndStartAfter(id, now, pageable);
+                break;
+            case WAITING:
+                bookingList = bookingRepository.findAllByItemOwnerIdAndStatus(id, Status.WAITING, pageable);
+                break;
+            case REJECTED:
+                bookingList = bookingRepository.findAllByItemOwnerIdAndStatus(id, Status.REJECTED, pageable);
+                break;
+            default:
+                bookingList = Collections.emptyList();
         }
 
         log.info("Get all owners booking with state  = {}", state);
