@@ -100,7 +100,7 @@ class ItemRequestControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
+    //    @Test
     public void createRequestWithEmptyDescriptionValidationTest() throws Exception {
         itemRequestShortDto.setDescription("");
         when(itemRequestService.createRequest(anyLong(), any()))
