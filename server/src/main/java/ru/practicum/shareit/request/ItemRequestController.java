@@ -17,38 +17,32 @@ import static ru.practicum.shareit.util.Constants.REQUEST_HEADER_USER_ID;
 @RestController
 @RequestMapping(path = "/requests")
 @RequiredArgsConstructor
-@Validated
-@Slf4j
 public class ItemRequestController {
     private final ItemRequestService requestService;
 
     @PostMapping()
     public ItemRequestDto createRequest(@RequestHeader(REQUEST_HEADER_USER_ID) Long id,
-                                        @RequestBody @Valid ItemRequestShortDto itemRequestShortDto) {
-        log.debug("Create request");
+                                        @RequestBody ItemRequestShortDto itemRequestShortDto) {
         return requestService.createRequest(id, itemRequestShortDto);
     }
 
     @GetMapping("/{requestId}")
     public ItemRequestDto getRequestById(@RequestHeader(REQUEST_HEADER_USER_ID) Long id,
                                          @PathVariable Long requestId) {
-        log.debug("Get requests by id = {}", id);
         return requestService.getRequestById(id, requestId);
     }
 
     @GetMapping("/all")
     public List<ItemRequestDto> getAllRequests(@RequestHeader(REQUEST_HEADER_USER_ID) Long id,
-                                               @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                               @Positive @RequestParam(defaultValue = "10") Integer size) {
-        log.debug("Get all requests");
+                                               @RequestParam(defaultValue = "0") Integer from,
+                                               @RequestParam(defaultValue = "10") Integer size) {
         return requestService.getAllRequests(id, from, size);
     }
 
     @GetMapping()
     public List<ItemRequestDto> getAllRequestsByRequester(@RequestHeader(REQUEST_HEADER_USER_ID) Long id,
-                                                          @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                                          @Positive @RequestParam(defaultValue = "10") Integer size) {
-        log.debug("Get all requests by requester ");
+                                                          @RequestParam(defaultValue = "0") Integer from,
+                                                          @RequestParam(defaultValue = "10") Integer size) {
         return requestService.getAllRequestsByRequester(id, from, size);
     }
 

@@ -18,7 +18,7 @@ public class ItemController {
     private final ItemService service;
 
     @PostMapping
-    public ItemDto createItem(@Valid @RequestBody ItemShortDto itemShortDto,
+    public ItemDto createItem(@RequestBody ItemShortDto itemShortDto,
                               @RequestHeader(REQUEST_HEADER_USER_ID) Long userId) {
         return service.createItem(itemShortDto, userId);
     }
@@ -50,7 +50,7 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@PathVariable Long itemId,
                                  @RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
-                                 @Valid @RequestBody CommentDto commentDto) {
+                                 @RequestBody CommentDto commentDto) {
         return service.addComment(commentDto, userId, itemId);
     }
 }

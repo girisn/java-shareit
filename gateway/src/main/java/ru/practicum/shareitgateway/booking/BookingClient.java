@@ -2,11 +2,13 @@ package ru.practicum.shareitgateway.booking;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareitgateway.booking.dto.BookItemRequestDto;
 import ru.practicum.shareitgateway.booking.dto.BookingState;
@@ -17,16 +19,9 @@ import java.util.Map;
 @Service
 @Slf4j
 public class BookingClient extends BaseClient {
-    private static final String API_PREFIX = "/bookings";
-
     @Autowired
-    public BookingClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
-        super(
-                builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
-                        .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                        .build()
-        );
+    public BookingClient(@Qualifier("bookings") RestTemplate restTemplate) {
+        super(restTemplate);
     }
 
     public ResponseEntity<Object> createBooking(long userId, BookItemRequestDto requestDto) {

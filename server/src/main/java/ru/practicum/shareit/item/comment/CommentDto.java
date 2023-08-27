@@ -16,13 +16,10 @@ import java.time.LocalDateTime;
 @Builder
 public class CommentDto {
     private Long id;
-    @NotBlank
-    @Size(max = 1000, groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
     private String text;
 
     private Long itemId;
 
-    @Size(max = 255, groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
     private String authorName;
 
     private LocalDateTime created;

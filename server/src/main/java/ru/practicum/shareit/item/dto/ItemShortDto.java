@@ -16,12 +16,7 @@ import javax.validation.constraints.Size;
 @Builder
 public class ItemShortDto {
     private Long id;
-    @Size(max = 255, groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
-    @NotBlank(message = "Name can't be blank")
     private String name;
-
-    @Size(max = 512, groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
-    @NotBlank(message = "Description can't be blank")
     private String description;
 
     @NotNull

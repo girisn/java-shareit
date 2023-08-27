@@ -13,8 +13,5 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode
 public class ItemRequestShortDto {
     private Long id;
-
-    @NotBlank(message = "Description can't be blank")
-    @Size(max = 512)
     private String description;
 }

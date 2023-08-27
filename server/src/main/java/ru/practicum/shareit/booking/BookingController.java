@@ -15,7 +15,6 @@ import static ru.practicum.shareit.util.Constants.REQUEST_HEADER_USER_ID;
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
-@Validated
 public class BookingController {
     private final BookingService bookingService;
 
@@ -34,16 +33,16 @@ public class BookingController {
     @GetMapping()
     public List<BookingDto> getAllBookingByState(@RequestHeader(REQUEST_HEADER_USER_ID) Long id,
                                                  @RequestParam(defaultValue = "ALL") String state,
-                                                 @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                                 @Positive @RequestParam(defaultValue = "10") Integer size) {
+                                                 @RequestParam(defaultValue = "0") Integer from,
+                                                 @RequestParam(defaultValue = "10") Integer size) {
         return bookingService.getAllBookingByState(id, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingDto> getAllItemsBookings(@RequestHeader(REQUEST_HEADER_USER_ID) Long id,
                                                 @RequestParam(defaultValue = "ALL") String state,
-                                                @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                                @Positive @RequestParam(defaultValue = "10") Integer size) {
+                                                @RequestParam(defaultValue = "0") Integer from,
+                                                @RequestParam(defaultValue = "10") Integer size) {
         return bookingService.getAllOwnersBookingByState(id, state, from, size);
     }
 
