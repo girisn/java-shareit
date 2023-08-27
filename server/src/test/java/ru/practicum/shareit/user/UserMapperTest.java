@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class UserMapperTest {

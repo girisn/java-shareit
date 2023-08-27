@@ -10,7 +10,6 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareitgateway.client.BaseClient;
 import ru.practicum.shareitgateway.request.dto.ItemRequestDto;
 
-
 import java.util.Map;
 
 @Service

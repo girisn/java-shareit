@@ -1,4 +1,3 @@
-
 package ru.practicum.shareit.item;
 
 import org.junit.jupiter.api.BeforeEach;

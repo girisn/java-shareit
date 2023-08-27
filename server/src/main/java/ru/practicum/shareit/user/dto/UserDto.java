@@ -1,6 +1,8 @@
 package ru.practicum.shareit.user.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import ru.practicum.shareit.marker.Marker;
 
 import javax.validation.constraints.Email;

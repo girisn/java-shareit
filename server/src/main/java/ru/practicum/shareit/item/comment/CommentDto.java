@@ -1,6 +1,9 @@
 package ru.practicum.shareit.item.comment;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.shareit.marker.Marker;
 
 import javax.validation.constraints.NotBlank;
