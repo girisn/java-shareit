@@ -6,7 +6,6 @@ import ru.practicum.shareit.item.comment.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemShortDto;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static ru.practicum.shareit.util.Constants.REQUEST_HEADER_USER_ID;
